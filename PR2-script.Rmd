@@ -1,0 +1,128 @@
+---
+title: "PR2 Tipologia y ciclo de vida de los datos"
+author: "Alejandro Barberá y Ferran Valverde"
+date: "2023-01-09"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(ggplot2)
+```
+
+# Descripción del dataset
+
+Este conjunto de datos ha sido tomado de https://www.kaggle.com/datasets/whenamancodes/students-performance-in-exams, y está formado por las notas de los estudiantes en diferentes asignaturas junto a algunas características de cada estudiante.
+Es interesante analizar este conjunto de datos para poder analizar y sacar conclusiones sobre que aspectos pueden influir más en el rendimiento de los estudiantes.
+A partir de estas conclusiones se pueden llegar a predecir las notas y reconducir a tiempo en caso de esperar un mal resultado académico.
+
+```{r}
+data <- read.csv('exams.csv')
+```
+
+
+# Integración y selección
+
+En este caso no eliminaremos ningún atributo sino que añadiremos variables categóricas para las notas, es decir, suspenso, aprobado, notable, excelente.
+También añadiremos una columna para las medias de las tres asignaturas para cada estudiante.
+```{r}
+data$math.result <- cut(data$math.score,
+              breaks=c(0, 50, 70, 90, 100),
+              labels=c('Fail', 'Sufficient', 'Good', 'Excellent'))
+data$reading.result <- cut(data$reading.score,
+              breaks=c(0, 50, 70, 90, 100),
+              labels=c('Fail', 'Sufficient', 'Good', 'Excellent'))
+data$writing.result <- cut(data$writing.score,
+              breaks=c(0, 50, 70, 90, 100),
+              labels=c('Fail', 'Sufficient', 'Good', 'Excellent'))
+data$meangrade <- rowMeans(data[6:8])
+
+head(data)
+
+```
+
+
+# Limpieza de los datos
+
+Antes de nada empezaremos corrigiendo los tipos de cada atributo en caso de que sea necesario.
+
+```{r}
+sapply(data, class)
+data$gender <- as.factor(data$gender)
+data$race.ethnicity <- as.factor(data$race.ethnicity)
+data$parental.level.of.education <- as.factor(data$parental.level.of.education)
+data$lunch <- as.factor(data$lunch)
+data$test.preparation.course <- as.factor(data$test.preparation.course)
+```
+Comprobamos que los cambios se han aplicado correctamente
+```{r}
+summary(data)
+```
+
+Con la comprovación de arriba podemos comprovar también si existen valores en blanco o NA, pero con las siguientes funciones es más facil de apreciar.
+```{r}
+#Valores NA
+colSums(is.na(data)) 
+#Valores en blanco
+colSums(data=="")
+```
+
+Como podemos observar no encontramos ningún valor en blanco o NA.
+
+Veamos si encontramos outliers en las variables numéricas.
+
+```{r}
+boxplot(data$math.score)
+boxplot.stats(data$math.score)$out
+
+boxplot(data$reading.score)
+boxplot.stats(data$reading.score)$out
+
+boxplot(data$writing.score)
+boxplot.stats(data$writing.score)$out
+```
+
+Vemos que si que hay unos pocos outliers para las notas de cada una de las asignaturas, podría ser conveniente eliminarlas pero al tratarse de una franja de notas cerrada (0-10) queremos analizar la totalidad de resultados, además no tenemos un motivo significante para eliminarlas.
+
+# Análisis y representación de los datos
+
+Para analizar los datos, queremos comprobar mediante gráficos algunas de las relaciones y distribuciones de variables.
+
+Distribuciones de los atributos:
+```{r}
+plot(data$gender, col = 'palegreen', main = 'Proporción de hombres y mujeres') # Hay aproximadamente el mismo número de hombres que de mujeres, aun que el total de hombres es ligeramente superior.
+plot(data$race.ethnicity, col = 'palegreen', main = 'Proporción de razas') # Como podemos apreciar, en este conjunto de datos se han especificado las razas de manera anónima. Esto puede ser interesante de cara a hacer los análisis sin suposiciones previas, aunque sería interesante conocer a que razas pertenece cada grupo una vez terminado el análisis.
+plot(data$parental.level.of.education, cex.names=0.6, col = 'palegreen', main = 'Proporción de estudios de los padres') # Podemos ver que muy pocos han llegado a hacer un máster como se podría llegar a esperar, pero también muy pocos han llegado a estudiar un grado.
+plot(data$lunch, col = 'palegreen', main = 'Proporción del plan de comida') # La mayoría tiene un plan estándar, pero muchos también tienen un plan reducido. 
+plot(data$test.preparation.course, col = 'palegreen', main = 'Proporción de tests iniciales hechos') # En este caso la mayoría no ha hecho el test de preparación.
+plot(data$math.result, col = 'palegreen', main = 'Proporción notas matematicas')
+plot(data$reading.result, col = 'palegreen', main = 'Proporción notas lectura')
+plot(data$writing.result, col = 'palegreen', main = 'Proporción notas escritura')
+```
+Relaciones entre atributos:
+
+```{r}
+
+plot(data$gender,data$meangrade) # Las notas de amos géneros son muy similares en general, aunque muy ligeramente superiores las de las mujeres.
+plot(data$race.ethnicity, data$meangrade) # La raza mas frecuente (C) también es la que obtiene peores resultados académicos.
+plot(data$parental.level.of.education, data$meangrade, cex.axis = 0.5) # Los resultados son esperados, los niños con padres estudiosos tienen mejores notas.
+plot(data$lunch, data$meangrade) # Los estudiantes con el plan de comida estándar tienen mejores notas.
+plot(data$test.preparation.course, data$meangrade) # Y los estudiantes con el test de preparación tienen mejores resultados.
+
+```
+
+Veamos ahora si por lo general los estudiantes suelen sacar notas parecidas en todas las asignaturas.
+```{r}
+newdata <- data[order(data$math.score),]
+
+ggplot(newdata, aes(x=seq(1:1000), y=seq(0:100)))+
+  geom_line(data = newdata, aes(x = seq(1:1000), y = reading.score), colour = 'red')+
+  geom_line(data = newdata, aes(x = seq(1:1000), y = writing.score), colour = 'orange')+
+  geom_line(data = newdata, aes(x = seq(1:1000), y = math.score), colour = 'black')
+```
+
+Como podemos ver hay una clara linea de tendencia, siendo la linea negra las notas de los estudiantes en matemáticas, la roja las notas de lectura y la naranja las notas de escritura.
+
+# Resolución del problema
+
+# 
