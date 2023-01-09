@@ -1,6 +1,6 @@
 ---
 title: "PR2 Tipologia y ciclo de vida de los datos"
-author: "Alejandro Barberá y Ferran Valverde"
+author: "Alejandro González Barberá y Ferran Valverde Parera"
 date: "2023-01-09"
 output: html_document
 ---
@@ -59,7 +59,7 @@ Comprobamos que los cambios se han aplicado correctamente
 summary(data)
 ```
 
-Con la comprovación de arriba podemos comprovar también si existen valores en blanco o NA, pero con las siguientes funciones es más facil de apreciar.
+Con el resultado de arriba podemos comprobar también si existen valores en blanco o NA, pero con las siguientes funciones es más facil de apreciar.
 ```{r}
 #Valores NA
 colSums(is.na(data)) 
@@ -90,6 +90,7 @@ Para analizar los datos, queremos comprobar mediante gráficos algunas de las re
 
 Distribuciones de los atributos:
 ```{r}
+
 plot(data$gender, col = 'palegreen', main = 'Proporción de hombres y mujeres') # Hay aproximadamente el mismo número de hombres que de mujeres, aun que el total de hombres es ligeramente superior.
 plot(data$race.ethnicity, col = 'palegreen', main = 'Proporción de razas') # Como podemos apreciar, en este conjunto de datos se han especificado las razas de manera anónima. Esto puede ser interesante de cara a hacer los análisis sin suposiciones previas, aunque sería interesante conocer a que razas pertenece cada grupo una vez terminado el análisis.
 plot(data$parental.level.of.education, cex.names=0.6, col = 'palegreen', main = 'Proporción de estudios de los padres') # Podemos ver que muy pocos han llegado a hacer un máster como se podría llegar a esperar, pero también muy pocos han llegado a estudiar un grado.
@@ -99,6 +100,7 @@ plot(data$math.result, col = 'palegreen', main = 'Proporción notas matematicas'
 plot(data$reading.result, col = 'palegreen', main = 'Proporción notas lectura')
 plot(data$writing.result, col = 'palegreen', main = 'Proporción notas escritura')
 ```
+
 Relaciones entre atributos:
 
 ```{r}
@@ -113,15 +115,17 @@ plot(data$test.preparation.course, data$meangrade) # Y los estudiantes con el te
 
 Veamos ahora si por lo general los estudiantes suelen sacar notas parecidas en todas las asignaturas.
 ```{r}
-newdata <- data[order(data$math.score),]
+newdata <- data[order(data$meangrade),]
 
 ggplot(newdata, aes(x=seq(1:1000), y=seq(0:100)))+
-  geom_line(data = newdata, aes(x = seq(1:1000), y = reading.score), colour = 'red')+
-  geom_line(data = newdata, aes(x = seq(1:1000), y = writing.score), colour = 'orange')+
-  geom_line(data = newdata, aes(x = seq(1:1000), y = math.score), colour = 'black')
+  geom_line(data = newdata, aes(x = seq(1:1000), y = reading.score), colour = 'purple')+
+  geom_line(data = newdata, aes(x = seq(1:1000), y = writing.score), colour = 'cyan')+
+  geom_line(data = newdata, aes(x = seq(1:1000), y = math.score), colour = 'black')+
+  geom_line(data = newdata, aes(x = seq(1:1000), y = meangrade), colour = 'red', size = 1.5)+
+  ggtitle("Notas de los estudiantes en todas las asignaturas")
 ```
 
-Como podemos ver hay una clara linea de tendencia, siendo la linea negra las notas de los estudiantes en matemáticas, la roja las notas de lectura y la naranja las notas de escritura.
+Como podemos ver hay una clara linea de tendencia, siendo la linea negra las notas de los estudiantes en matemáticas, la morada las notas de lectura, la cían las notas de escritura y la línea roja la media.
 
 # Resolución del problema
 
