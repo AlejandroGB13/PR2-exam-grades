@@ -10,5 +10,5 @@ Los miembros del proyecto son Alejandro González Barberá y Ferran Valverde Par
 - rmarkdown_2.19
 
 ## Contenido del repositorio
-- code/* : código para la limpieza e análisis de los datos
+- code/* : código para la limpieza e análisis de los datos, pdf y html
 - data/exams.csv: conjunto de datos utilizado
