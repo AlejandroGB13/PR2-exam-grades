@@ -6,19 +6,20 @@ header-includes:
   \usepackage{fvextra}
   \DefineVerbatimEnvironment{Highlighting}{Verbatim}{breaklines,commandchars=\\\{\}}
 output:
+  pdf_document:
+    toc: yes
+    toc_depth: '2'
   html_document:
     toc: yes
     number_sections: yes
     toc_depth: 2
-  pdf_document:
-    toc: yes
-    toc_depth: '2'
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 knitr::opts_chunk$set(tidy.opts=list(width.cutoff=60),tidy=TRUE)
 library(ggplot2)
+library(corrplot)
 ```
 
 # Descripción del dataset
@@ -150,7 +151,24 @@ En las tres habilidades muestreadas vemos que la mayoría de notas se concentran
 
 ```{r}
 
+data_scores <- data[, c('math.score', 'reading.score', 'writing.score')]
+corrplot(cor(data_scores),        
+         method = "color", 
+         type = "full",    
+         diag = TRUE,      
+         tl.col = "black", 
+         bg = "white",     
+         title = "Correlación entre las notas de las asignaturas",       
+         col = NULL)       
+```
+
+Las notas de las tres asignaturas guardan una estrecha correlación entre sí, pero en especial entre writing y reading.
+
+```{r}
+
 plot(data$gender,data$meangrade, main = 'Género vs Notas medias', ylab = 'Notas medias', xlab = 'Género') 
+
+ggplot(data, aes(x=math.score, y=reading.score, shape=gender, color=writing.score)) + geom_point()
 ```
 
 Las notas de amos géneros son muy similares en general, aunque muy ligeramente superiores las de las mujeres.
@@ -158,6 +176,8 @@ Las notas de amos géneros son muy similares en general, aunque muy ligeramente 
 ```{r}
 
 plot(data$race.ethnicity, data$meangrade, main = 'Raza vs Notas medias', ylab = 'Notas medias', xlab = 'Raza') 
+
+ggplot(data, aes(x=math.score, y=reading.score, shape=race.ethnicity, color=writing.score)) + geom_point()
 ```
 
 La raza mas frecuente (C) también es la que obtiene peores resultados académicos.
@@ -165,6 +185,8 @@ La raza mas frecuente (C) también es la que obtiene peores resultados académic
 ```{r}
 
 plot(data$parental.level.of.education, data$meangrade, cex.axis = 0.5, main = 'Educación padres vs Notas medias', ylab = 'Notas medias', xlab = 'Educación padres') 
+
+ggplot(data, aes(x=math.score, y=reading.score, shape=parental.level.of.education, color=writing.score)) + geom_point()
 ```
 
 Los resultados son esperados, los niños con padres estudiosos tienen mejores notas.
@@ -172,6 +194,8 @@ Los resultados son esperados, los niños con padres estudiosos tienen mejores no
 ```{r}
 
 plot(data$lunch, data$meangrade, main = 'Plan comida vs Notas medias', ylab = 'Notas medias', xlab = 'Plan comida') 
+
+ggplot(data, aes(x=math.score, y=reading.score, shape=lunch, color=writing.score)) + geom_point()
 ```
 
 Los estudiantes con el plan de comida estándar tienen mejores notas.
@@ -179,7 +203,9 @@ Los estudiantes con el plan de comida estándar tienen mejores notas.
 
 ```{r}
 
-plot(data$test.preparation.course, data$meangrade, main = 'Test de preparación vs Notas medias', ylab = 'Notas medias', xlab = 'Test de preparación') 
+plot(data$test.preparation.course, data$meangrade, main = 'Test de preparación vs Notas medias', ylab = 'Notas medias', xlab = 'Test de preparación')
+
+ggplot(data, aes(x=math.score, y=reading.score, shape=test.preparation.course, color=writing.score)) + geom_point()
 ```
 
 Y los estudiantes con el test de preparación tienen mejores resultados.
