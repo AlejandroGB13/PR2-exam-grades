@@ -21,7 +21,7 @@ Es interesante analizar este conjunto de datos para poder analizar y sacar concl
 A partir de estas conclusiones se pueden llegar a predecir las notas y reconducir a tiempo en caso de esperar un mal resultado académico.
 
 ```{r}
-data <- read.csv('exams.csv')
+data <- read.csv('../data/exams.csv')
 ```
 
 
@@ -143,28 +143,28 @@ En las tres habilidades muestreadas vemos que la mayoría de notas se concentran
 
 ```{r}
 
-plot(data$gender,data$meangrade) 
+plot(data$gender,data$meangrade, main = 'Género vs Notas medias', ylab = 'Notas medias', xlab = 'Género') 
 ```
 
 Las notas de amos géneros son muy similares en general, aunque muy ligeramente superiores las de las mujeres.
 
 ```{r}
 
-plot(data$race.ethnicity, data$meangrade) 
+plot(data$race.ethnicity, data$meangrade, main = 'Raza vs Notas medias', ylab = 'Notas medias', xlab = 'Raza') 
 ```
 
 La raza mas frecuente (C) también es la que obtiene peores resultados académicos.
 
 ```{r}
 
-plot(data$parental.level.of.education, data$meangrade, cex.axis = 0.5) 
+plot(data$parental.level.of.education, data$meangrade, cex.axis = 0.5, main = 'Educación padres vs Notas medias', ylab = 'Notas medias', xlab = 'Educación padres') 
 ```
 
 Los resultados son esperados, los niños con padres estudiosos tienen mejores notas.
 
 ```{r}
 
-plot(data$lunch, data$meangrade) 
+plot(data$lunch, data$meangrade, main = 'Plan comida vs Notas medias', ylab = 'Notas medias', xlab = 'Plan comida') 
 ```
 
 Los estudiantes con el plan de comida estándar tienen mejores notas.
@@ -172,7 +172,7 @@ Los estudiantes con el plan de comida estándar tienen mejores notas.
 
 ```{r}
 
-plot(data$test.preparation.course, data$meangrade) 
+plot(data$test.preparation.course, data$meangrade, main = 'Test de preparación vs Notas medias', ylab = 'Notas medias', xlab = 'Test de preparación') 
 ```
 
 Y los estudiantes con el test de preparación tienen mejores resultados.
@@ -182,19 +182,19 @@ Veamos ahora si por lo general los estudiantes suelen sacar notas parecidas en t
 newdata <- data[order(data$meangrade),]
 
 ggplot(newdata, aes(x=seq(1:1000), y=seq(0:100)))+
-  geom_line(data = newdata, aes(x = seq(1:1000), y = reading.score), colour = 'purple')+
-  geom_line(data = newdata, aes(x = seq(1:1000), y = writing.score), colour = 'cyan')+
-  geom_line(data = newdata, aes(x = seq(1:1000), y = math.score), colour = 'black')+
-  geom_line(data = newdata, aes(x = seq(1:1000), y = meangrade), colour = 'red', size = 1.5)+
+  geom_point(data = newdata, aes(x = seq(1:1000), y = reading.score), colour = 'purple')+
+  geom_point(data = newdata, aes(x = seq(1:1000), y = writing.score), colour = 'cyan')+
+  geom_point(data = newdata, aes(x = seq(1:1000), y = math.score), colour = 'black')+
+  geom_line(data = newdata, aes(x = seq(1:1000), y = meangrade), colour = 'red', size = 1.2)+
   ggtitle("Notas de los estudiantes en todas las asignaturas")
 ```
 
-Como podemos ver hay una clara linea de tendencia, siendo la linea negra las notas de los estudiantes en matemáticas, la morada las notas de lectura, la cían las notas de escritura y la línea roja la media.
+Como podemos ver hay una clara linea de tendencia, siendo los puntos negros las notas de los estudiantes en matemáticas, los morados las notas de lectura, los cían las notas de escritura y la línea roja la media. También podemos apreciar que los estudiantes parecen tener notas más bajas en matemáticas respecto a las otras asignaturas.
 
 # Resolución del problema
-Tras el análisis realizado, podemos concluir que no hay diferencia significativas en las notas entre mujeres y hombres. Pero sí hay diferencia es en relación a la raza y la educación de los padres, donde los grupos D y E sobresalen de los demás y los hijos con padres con estudios superiores también reciben mejores notas. Además, los estudiantes con el plan de comida estándar tiene mejores notas.
+Tras el análisis realizado, podemos concluir que no hay diferencia significativas en las notas entre mujeres y hombres. Pero sí hay diferencia en relación a la raza y la educación de los padres, donde los grupos D y E sobresalen de los demás y los hijos con padres con estudios superiores también reciben mejores notas. Además, los estudiantes con el plan de comida estándar tiene mejores notas, esto puede significar que los estudiantes con un nivel socio-económico mas alto tienen mejores resultados académicos.
 
-Por último, cabe destacar que los estudiantes tienen tendencia a sacar notas similares en las asignaturas muestreadas.
+Por último, cabe destacar que los estudiantes tienen tendencia a sacar notas similares en las asignaturas mostradas.
 
 # Versiones
 
