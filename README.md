@@ -1,7 +1,7 @@
 # Análisis de los estudiantes y sus notas
 ## Conjunto de datos con información sobre estudiantes, sus resultados academicos y otras variables relacionadas.
 Dataset descargado de https://www.kaggle.com/datasets/whenamancodes/students-performance-in-exams.
-Descripción: notas de los estudiantes en diferentes asignaturas junto cualidades de los anteriores.
+Descripción: notas de los estudiantes en diferentes asignaturas junto a factores relacionados con los mismos.
 ## Autores
 Los miembros del proyecto son Alejandro González Barberá y Ferran Valverde Parera.
 ## Versiones
