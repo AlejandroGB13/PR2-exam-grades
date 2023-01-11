@@ -151,21 +151,6 @@ En las tres habilidades muestreadas vemos que la mayoría de notas se concentran
 
 ```{r}
 
-data_scores <- data[, c('math.score', 'reading.score', 'writing.score')]
-corrplot(cor(data_scores),        
-         method = "color", 
-         type = "full",    
-         diag = TRUE,      
-         tl.col = "black", 
-         bg = "white",     
-         title = "Correlación entre las notas de las asignaturas",       
-         col = NULL)       
-```
-
-Las notas de las tres asignaturas guardan una estrecha correlación entre sí, pero en especial entre writing y reading.
-
-```{r}
-
 plot(data$gender,data$meangrade, main = 'Género vs Notas medias', ylab = 'Notas medias', xlab = 'Género') 
 
 ggplot(data, aes(x=math.score, y=reading.score, shape=gender, color=writing.score)) + geom_point()
@@ -211,6 +196,22 @@ ggplot(data, aes(x=math.score, y=reading.score, shape=test.preparation.course, c
 Y los estudiantes con el test de preparación tienen mejores resultados.
 
 Veamos ahora si por lo general los estudiantes suelen sacar notas parecidas en todas las asignaturas.
+
+```{r}
+
+data_scores <- data[, c('math.score', 'reading.score', 'writing.score')]
+corrplot(cor(data_scores),        
+         method = "color", 
+         type = "full",    
+         diag = TRUE,      
+         tl.col = "black", 
+         bg = "white",     
+         title = "Correlación entre las notas de las asignaturas",       
+         col = NULL)       
+```
+
+Las notas de las tres asignaturas guardan una estrecha correlación entre sí, pero en especial entre writing y reading.
+
 ```{r}
 newdata <- data[order(data$meangrade),]
 
